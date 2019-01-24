@@ -582,10 +582,11 @@ void CPU::update()
 
 		lineNum++;
 			
-		if (lineNum == 16960 || debug == true) {
-			//	debug = true;
-			//	printCurrentState(opcode);
-			//	system("PAUSE");
+		if (mem.read(0xFF01) == 0xFF) {
+			//mem.memory[0xFF01] = 0x00;
+			//debug = true;
+			//printCurrentState(opcode);
+			//system("PAUSE");
 		}
 				//system("PAUSE");
 			
@@ -614,7 +615,7 @@ void CPU::loadGame()
 {
 	memset(mem.cartridge, 0, sizeof(mem.cartridge));
 	FILE* rom;
-	rom = fopen("03-op sp,hl.gb", "rb");
+	rom = fopen("08-misc instrs.gb", "rb");
 	fread(mem.cartridge, 1, 0x200000, rom);
 	fclose(rom);
 
@@ -627,7 +628,7 @@ void CPU::printCurrentState(byte opcode)
 {
 	cout << std::hex;
 
-	cout << "l:" << std::dec << lineNum << " pc:" << std::hex << reg.pc << " af:" << reg.af << " bc:" << reg.bc << " de:" << reg.de << " hl:" << reg.hl << " ly:" << (int)mem.read(0xFF44) << " cy:" << std::dec << totalCycles << std::endl;
+	cout << "l:" << std::dec << lineNum << " pc:" << std::hex << reg.pc << " af:" << reg.af << " bc:" << reg.bc << " de:" << reg.de << " hl:" << reg.hl << " sp:" << reg.sp << " ly:" << (int)mem.read(0xFF44) << " cy:" << std::dec << totalCycles << std::endl;
 	//cout << std::hex << "pc: " << reg.pc << "; opcode: " << (int)opcode << "\n" << std::endl;
 }
 

@@ -59,14 +59,13 @@ MMU::~MMU()
 
 void MMU::write(word address, byte data)
 {
-
+	
 	//Prevent writes to ROM
 	if (address < 0x8000) {
 	}
 
 	else if ((address >= 0xC000) && (address <= 0xDFFF)) {
 		memory[address] = data;
-		memory[address + 0x2000] = data;
 	}
 
 	//Write to RAM and ECHO RAM
@@ -81,6 +80,7 @@ void MMU::write(word address, byte data)
 	else if (address >= 0xFEA0 && address < 0xFEFF) {
 	}
 	else if (address == 0xFF01) {
+		memory[0xFF01] = 0xFF;
 		std::cout << data;
 	}
 	else if (address == 0xFF02 && data == 0x81) {
@@ -96,7 +96,7 @@ void MMU::write(word address, byte data)
 	} 
 	else if (address == 0xFF46) {
 		DMA_Transfer(data);
-	}
+	} 
 	else {
 		memory[address] = data;
 	}
