@@ -312,97 +312,35 @@ byte CPU::DEC_8bit(byte value)
 void CPU::DAA()
 {
 
-	if (reg.getFlag(NFLAG)) { //SUB
-		if (reg.getFlag(CFLAG)) { //c=1
+	if (!reg.getFlag(NFLAG)) {
 
-			if (reg.getFlag(HFLAG)) { //h=1
-				reg.a += 0x9A;
-			}
-			else { //h=0
-				reg.a += 0xA0;
-			}
+		if (reg.getFlag(CFLAG) || reg.a > 0x99) {
+			reg.a += 0x60;
 			reg.setFlag(CFLAG);
 		}
-		else { //c=0
-			if (reg.getFlag(HFLAG)) {
-				reg.a += 0xFA;
-			}
-			reg.resetFlag(CFLAG);
+		if (reg.getFlag(HFLAG) || (reg.a & 0x0F) > 0x09) {
+			reg.a += 0x6;
+		}
+
+	}
+	else {
+		if (reg.getFlag(CFLAG)) {
+			reg.a -= 0x60;
+		}
+		if (reg.getFlag(HFLAG)) {
+			reg.a -= 0x6;
 		}
 	}
-	else { //ADD
 
-		if (reg.getFlag(CFLAG)) {
-
-			if (reg.getFlag(HFLAG)) {
-				reg.a += 0x66;
-			}
-			else {
-
-				if ((reg.a & 0xF) <= 0x9) {
-					reg.a += 0x60;
-				}
-				else {
-					reg.a += 0x66;
-				}
-
-			}
-			reg.setFlag(CFLAG);
-		}
-		else {
-
-			if (reg.getFlag(HFLAG)) {
-
-				if ((reg.a & 0xF0) <= 0x9) {
-					reg.a += 0x06;
-					reg.resetFlag(CFLAG);
-				}
-				else {
-					reg.a += 0x66;
-					reg.setFlag(CFLAG);
-				}
-
-			}
-			else {
-
-				if ((reg.a & 0x0F) <= 0x9) {
-
-					if ((reg.a & 0xF0) <= 0x9) {
-						reg.resetFlag(CFLAG);
-					}
-					else {
-						reg.a += 0x60;
-						reg.setFlag(CFLAG);
-					}
-
-				}
-				else {
-
-					if ((reg.a & 0xF0) <= 0x8) {
-						reg.a += 0x06;
-						reg.resetFlag(CFLAG);
-					}
-					else {
-						reg.a += 0x66;
-						reg.setFlag(CFLAG);
-					}
-
-				}
-
-			}
-
-		}
-
+	if (reg.a == 0) {
+		reg.setFlag(ZFLAG);
+	}
+	else {
+		reg.resetFlag(ZFLAG);
 	}
 
 	reg.resetFlag(HFLAG);
 
-	if (reg.a) {
-		reg.resetFlag(ZFLAG);
-	}
-	else {
-		reg.setFlag(ZFLAG);
-	}
 
 }
 

@@ -614,7 +614,7 @@ void CPU::loadGame()
 {
 	memset(mem.cartridge, 0, sizeof(mem.cartridge));
 	FILE* rom;
-	rom = fopen("Boxxle (U) (V1.1) [!].gb", "rb");
+	rom = fopen("03-op sp,hl.gb", "rb");
 	fread(mem.cartridge, 1, 0x200000, rom);
 	fclose(rom);
 
