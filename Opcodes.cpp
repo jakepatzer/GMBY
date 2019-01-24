@@ -802,7 +802,7 @@ byte CPU::execute(byte opcode) {
 		RST(0x20);
 		return 16;
 	case 0xE8:
-		ADD_sp((signed_byte)mem.read((reg.pc)));
+		ADD_sp((signed_byte)mem.read(reg.pc));
 		reg.pc++;
 		return 16;
 	case 0xE9:

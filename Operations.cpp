@@ -61,14 +61,14 @@ void CPU::ADD_sp(signed_byte value)
 	reg.resetFlag(ZFLAG);
 	reg.resetFlag(NFLAG);
 
-	if (((reg.sp & 0xFFF) + value) & 0x1000) {
+	if (((reg.sp & 0xF) + ((byte)value & 0xF)) & 0x10) {
 		reg.setFlag(HFLAG);
 	}
 	else {
 		reg.resetFlag(HFLAG);
 	}
 
-	if (reg.sp + value > 0xFFFF) {
+	if ((reg.sp & 0xFF) + (byte)value > 0xFF) {
 		reg.setFlag(CFLAG);
 	}
 	else {
@@ -541,36 +541,22 @@ void CPU::LDHL(signed_byte e)
 {
 
 	reg.resetFlag(NFLAG | ZFLAG);
-	byte e_u = abs(e);
-	reg.hl = reg.sp + e;
-	if (e >= 0) {
-		if ((reg.sp & 0xFF) + e > 0xFF) {
-			reg.setFlag(CFLAG);
-		}
-		else {
-			reg.resetFlag(CFLAG);
-		}
-		if ((reg.sp & 0xF) + (e & 0xF) > 0xF) {
-			reg.setFlag(HFLAG);
-		}
-		else {
-			reg.resetFlag(HFLAG);
-		}
+	
+	if (((reg.sp & 0xF) + ((byte)e & 0xF)) & 0x10) {
+		reg.setFlag(HFLAG);
 	}
 	else {
-		if ((reg.sp & 0xFF) > e_u) {
-			reg.resetFlag(CFLAG);
-		}
-		else {
-			reg.setFlag(CFLAG);
-		}
-		if ((reg.sp & 0xF) > (e_u & 0xF)) {
-			reg.resetFlag(HFLAG);
-		}
-		else {
-			reg.setFlag(HFLAG);
-		}
+		reg.resetFlag(HFLAG);
 	}
+
+	if ((reg.sp & 0xFF) + (byte)e > 0xFF) {
+		reg.setFlag(CFLAG);
+	}
+	else {
+		reg.resetFlag(CFLAG);
+	}
+
+	reg.hl = reg.sp + e;
 
 }
 
