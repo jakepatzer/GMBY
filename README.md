@@ -8,8 +8,8 @@ Like I said, this is a work in progress, and the code is not documented very wel
 In order to run the code, build the project in Visual Studio 2017. SDL2 is required.
 
 ### Game Compatibility
-Boxxle: Boots to title screen, demo runs correctly
-Tetris: Boots to title screen, demo runs correctly
+Boxxle: Boots to title screen, demo runs correctly  
+Tetris: Boots to title screen, demo runs correctly  
 
 ### Blargg's CPU Tests (Currently):
 Passed: 01-special.gb  
