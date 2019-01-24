@@ -17,8 +17,7 @@ Passed: 04-op r,imm.gb
 Passed: 05-op rp.gb  
 Passed: 06-ld r,r.gb  
 Passed: 07-jr,jp,call,ret,rst.gb  
-Failed: 08-misc instrs.gb  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"F0 E0 F2 E2 FA EA 08 01 11 21 31 F5 C5 D5 E5 F1 C1 D1 E1"  
+Passed: 08-misc instrs.gb  
 Passed: 09-op r,r.gb  
 Passed: 10-bit ops.gb  
 Passed: 11-op a,(hl).gb  
