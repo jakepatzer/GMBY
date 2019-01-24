@@ -91,7 +91,7 @@ void CPU::updateTimers(byte cycles)
 
 byte CPU::interrupts()
 {
-
+	byte cycles = 0;
 	if (mem.read(IF)) {
 		for (byte i = 0; i < 5; i++) {
 			if (bitSelect(mem.read(IF), i)) {
@@ -99,13 +99,13 @@ byte CPU::interrupts()
 					//halt = false;
 					if (IME) {
 						executeInterrupt(i);
-						return 20;
+						cycles += 20;
 					}
 				}
 			}
 		}
 	}
-	return 0;
+	return cycles;
 }
 
 void CPU::executeInterrupt(byte interrupt)
@@ -615,7 +615,7 @@ void CPU::loadGame()
 {
 	memset(mem.cartridge, 0, sizeof(mem.cartridge));
 	FILE* rom;
-	rom = fopen("08-misc instrs.gb", "rb");
+	rom = fopen("02-interrupts.gb", "rb");
 	fread(mem.cartridge, 1, 0x200000, rom);
 	fclose(rom);
 
