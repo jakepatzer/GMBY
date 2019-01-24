@@ -12,8 +12,7 @@ Passed: 01-special.gb
 Failed: 02-interrupts.gb  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Timer doesn't work"  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Failed #4"  
-Failed: 03-op sp,hl.gb  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"E8 E8 F8"  
+Passed: 03-op sp,hl.gb   
 Passed: 04-op r,imm.gb  
 Passed: 05-op rp.gb  
 Passed: 06-ld r,r.gb  
