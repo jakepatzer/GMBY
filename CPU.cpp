@@ -5,7 +5,6 @@
 
 using std::cout;
 
-
 CPU::CPU(SDL_Window* w, SDL_Renderer* r)
 {
 	loadGame();
@@ -195,5 +194,3 @@ void CPU::printCurrentState(byte opcode)
 		<< " hl:" << reg.hl << " sp:" << reg.sp << " ly:" << (int)mem.read(0xFF44) << " cy:" << std::dec << totalCycles << std::endl;
 	
 }
-
-

@@ -53,5 +53,3 @@ struct Registers {
 	void toggleFlag(byte flag);
 
 };
-
-

@@ -79,7 +79,7 @@ public:
 
 private:
 	Registers reg;
-	MMU mem;
+	MMU mem = MMU(this);
 	int screen[160][144][3];
 	int timerCounter;
 	int dividerCounter;
@@ -94,4 +94,3 @@ private:
 	bool debug = false;
 	int totalCycles;
 };
-
