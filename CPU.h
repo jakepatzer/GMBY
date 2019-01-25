@@ -14,20 +14,18 @@ public:
 	void updateTimers(byte cycles);
 	byte interrupts();
 	void executeInterrupt(byte interrupt);
-	void updateScreen(byte cycles);
 	void update();
 	void run();
-	void requestInterrupt(byte bit);
 	void loadGame();
-
 	void printCurrentState(byte opcode);
 
-
+	//////Opcodes.cpp//////
 	byte execute(byte opcode);
 	byte executeCB(byte opcode);
 
 
-	//////DISPLAY//////
+	//////Graphics.cpp//////
+	void updateScreen(byte cycles);
 	bool LCD_Enabled();
 	void setLCDStatus();
 	void drawScanline();
@@ -36,7 +34,7 @@ public:
 	Color getColor(byte colorNum, word address);
 	void renderScreen();
 
-	//////Operations///////
+	//////Operations.cpp//////
 	void ADD_8bit(byte value);
 	void ADD_16bit(word& dest, word value);
 	void ADD_sp(signed_byte value);
@@ -70,12 +68,12 @@ public:
 	void CALL(byte valueL, byte valueH);
 	void RET();
 	void RETI();
-
+	void requestInterrupt(byte bit);
 	byte bitSelect(byte value, byte bit);
-
 	byte bitSet(byte value, byte bit);
-
 	byte bitReset(byte value, byte bit);
+
+
 
 	long int lineNum;
 

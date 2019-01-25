@@ -22,20 +22,18 @@ enum Register {
 class MMU
 {
 public:
-	MMU();
+	MMU(CPU* cpu);
 	~MMU();
 
 	void write(word address, byte data);
-	void write16(word address, word data);
 	byte read(word address);
 	word read16(word address);
 	void DMA_Transfer(byte data);
 
 	byte* memory;
 	byte* cartridge;
-	//CPU* cpu;
+	CPU* cpu;
 	
-	//byte MBC;
 };
 
 /*
@@ -51,23 +49,4 @@ FEA0-FEFF Not Usable
 FF00-FF7F I/O Ports
 FF80-FFFE High RAM (HRAM)
 FFFF Interrupt Enable Register
-*/
-
-/*
-FF04 - DIV (Divider register) (r/w)
-	-Incremented at rate of 16384 Hz
-	- Writing any value resets to 0
-FF05 - TIMA (Time counter) (r/w)
-	- incremented at rate specified by TAC
-	-When overflow, reset to TMA, request interrupt
-FF06 - TMA (timer modulo) (r/w)
-FF07 - TAC (timer control (r/w)
-	- bit 2 = Timer stop (0=stop, 1=start)
-	-bits 1-0 = Input clock select
-		00 = 4096 hz
-		01 = 262144 hz
-		10 = 65536 hz
-		11 = 16384 hz
-4194304Hz
-
 */

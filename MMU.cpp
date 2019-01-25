@@ -3,9 +3,9 @@
 #include "CPU.h"
 
 
-MMU::MMU()
+MMU::MMU(CPU* cpu)
 {
-	//this->cpu = cpu;
+	this->cpu = cpu;
 	memory = new byte[0x10000];
 	cartridge = new byte[0x200000];
 
@@ -44,10 +44,6 @@ MMU::MMU()
 	memory[0xFF4B] = 0x00;
 	memory[0xFFFF] = 0x00;
 
-
-	//memory[0xFF44] = 0x91;
-	/////
-	memory[0xFF00] = 0x1F;
 }
 
 
@@ -64,12 +60,12 @@ void MMU::write(word address, byte data)
 	if (address < 0x8000) {
 	}
 
-	else if ((address >= 0xC000) && (address <= 0xDFFF)) {
+	else if ((0xC000 <= address) && (address < 0xE000)) {
 		memory[address] = data;
 	}
 
 	//Write to RAM and ECHO RAM
-	else if (address >= 0xE000 && address < 0xFE00) {
+	else if (0xE000 <= address && address < 0xFE00) {
 
 		memory[address] = data;
 		memory[address - 0x2000] = data;
@@ -77,40 +73,31 @@ void MMU::write(word address, byte data)
 	}
 
 	//Prevent writing to unusable memory
-	else if (address >= 0xFEA0 && address < 0xFEFF) {
-	}
-	else if (address == 0xFF01) {
-		memory[0xFF01] = 0xFF;
-		std::cout << data;
-	}
-	else if (address == 0xFF02 && data == 0x81) {
-		//std::cout << data << std::endl;
+	else if (0xFEA0 <= address && address < 0xFF00) {
 	}
 
+	//Divider register
 	else if (address == 0xFF04) {
 		memory[address] = 0;
 		//reset dividercounter
 	}
+
+	//LY register
 	else if (address == 0xFF44) {
 		memory[address] = 0;
 	} 
+
 	else if (address == 0xFF46) {
 		DMA_Transfer(data);
 	} 
+
 	else {
 		memory[address] = data;
 	}
 }
 
-void MMU::write16(word address, word data)
-{
-	byte hi = (data & 0xFF00) >> 8;
-	byte lo = data & 0x00FF;
-	write(address, hi);
-	write(address + 1, lo);
-}
-
 byte MMU::read(word address) {
+
 	if (address == 0xFF00) {
 		return 0x1F;
 	}
