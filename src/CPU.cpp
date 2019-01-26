@@ -142,6 +142,7 @@ void CPU::update()
 	
 	while (currentCycles < MAX_CYCLES_PER_REFRESH) {
 
+		updateJoypad();
 		byte cycles = interrupts();
 
 		byte opcode = mem.read(reg.pc);
@@ -178,7 +179,7 @@ void CPU::loadGame()
 {
 	memset(mem.cartridge, 0, sizeof(mem.cartridge));
 	FILE* rom;
-	rom = fopen("Tetris.gb", "rb");
+	rom = fopen("roms//Tetris.gb", "rb");
 	fread(mem.cartridge, 1, 0x200000, rom);
 	fclose(rom);
 
