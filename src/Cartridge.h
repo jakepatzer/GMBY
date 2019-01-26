@@ -13,15 +13,19 @@ struct Cartridge {
 	std::string title;
 	MemoryBankController mbc;
 	byte* rom;
-	bool ram;
+	byte* ram;
+	bool containsRam;
 	bool battery;
 	bool timer;
 	int romSize;
 	int ramSize;
 
+	bool ramEnable;
+	bool mode;
+	byte bankNum;
+
 private:
 
-	//void openRom();
 	void setMBC();
 	void setRomSize();
 	void setRamSize();

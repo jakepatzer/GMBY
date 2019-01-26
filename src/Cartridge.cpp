@@ -3,9 +3,22 @@
 Cartridge::Cartridge(std::string path)
 {
 	rom = new byte[0x200000];
-	ram = false;
+	ram = new byte[0x10000]; //64 kb
+	
+	for (int i = 0; i < 0x200000; i++) {
+		rom[i] = 0;
+	}
+
+	for (int i = 0; i < 0x10000; i++) {
+		ram[i] = 0;
+	}
+
+	containsRam = false;
 	battery = false;
 	timer = false;
+	ramEnable = false;
+	mode = false;
+	bankNum = 0x01;
 
 	memset(rom, 0, sizeof(rom));
 	FILE* file;
@@ -43,11 +56,11 @@ void Cartridge::setMBC()
 		break;
 	case 0x02:
 		mbc = MBC1;
-		ram = true;
+		containsRam = true;
 		break;
 	case 0x03:
 		mbc = MBC1;
-		ram = true;
+		containsRam = true;
 		battery = true;
 		break;
 	case 0x05:
@@ -59,11 +72,11 @@ void Cartridge::setMBC()
 		break;
 	case 0x08:
 		mbc = NONE;
-		ram = true;
+		containsRam = true;
 		break;
 	case 0x09:
 		mbc = NONE;
-		ram = true;
+		containsRam = true;
 		battery = true;
 		break;
 	case 0x0F:
@@ -75,18 +88,18 @@ void Cartridge::setMBC()
 		mbc = MBC3;
 		timer = true;
 		battery = true;
-		ram = true;
+		containsRam = true;
 		break;
 	case 0x11:
 		mbc = MBC3;
 		break;
 	case 0x12:
 		mbc = MBC3;
-		ram = true;
+		containsRam = true;
 		break;
 	case 0x13:
 		mbc = MBC3;
-		ram = true;
+		containsRam = true;
 		battery = true;
 		break;
 	}

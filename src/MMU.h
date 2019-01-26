@@ -33,7 +33,6 @@ public:
 
 	Cartridge* cartridge;
 	byte* memory;
-	//byte* cartridge;
 	CPU* cpu;
 	
 };
