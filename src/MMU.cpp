@@ -7,7 +7,7 @@ MMU::MMU(CPU* cpu)
 {
 	this->cpu = cpu;
 	memory = new byte[0x10000];
-	cartridge = new byte[0x200000];
+	cartridge = nullptr;
 
 	for (int i = 0; i < 0xFFFF; i++) {
 		memory[i] = 0;
@@ -52,7 +52,7 @@ MMU::MMU(CPU* cpu)
 MMU::~MMU()
 {
 	delete[] memory;
-	delete[] cartridge;
+	delete cartridge;
 }
 
 void MMU::write(word address, byte data)
@@ -105,6 +105,10 @@ void MMU::write(word address, byte data)
 
 byte MMU::read(word address) {
 	
+	if (address < 0x8000) {
+		return (*cartridge)[address];
+	}
+
 	//Joypad register; bits 6-7 always return 1
 	if (address == 0xFF00) {
 		return memory[address] | 0xC0;

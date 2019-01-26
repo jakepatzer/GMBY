@@ -1,5 +1,6 @@
 #pragma once
 #include "Definitions.h"
+#include "Cartridge.h"
 
 class CPU;
 
@@ -30,8 +31,9 @@ public:
 	word read16(word address);
 	void DMA_Transfer(byte data);
 
+	Cartridge* cartridge;
 	byte* memory;
-	byte* cartridge;
+	//byte* cartridge;
 	CPU* cpu;
 	
 };

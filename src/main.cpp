@@ -30,7 +30,12 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
+	cout << "ROM file name: ";
+	string game;
+	cin >> game;
+
 	CPU gameboy(window, renderer);
+	gameboy.loadGame("roms//" + game);
 	gameboy.run();
 
 	return 0;
