@@ -1,15 +1,17 @@
 # GMBY
 ##### A work in progress Game Boy DMG emulator
 
-Very early work in progress. Keyboard input and sound is not yet implemented, just the CPU and graphics. The next step is to implement keyboard controls and sound.
+Very early work in progress. Sound is not yet implemented. The next step is to implement memory bank switching.
 
 Like I said, this is a work in progress, and the code is not documented very well. I will go through and document/organize it once a little more progress is made.
 
 In order to run the code, build the project in Visual Studio 2017. SDL2 is required.
 
 ### Game Compatibility
-Boxxle: Boots to title screen, demo runs correctly  
-Tetris: Boots to title screen, demo runs correctly  
+Boxxle*: Boots to title screen, demo runs correctly  
+Tetris: Playable  
+  
+*game hasn't been tested since most recent improvements
 
 ### Blargg's CPU Tests (Currently):
 Passed: 01-special.gb  

@@ -19,10 +19,12 @@ public:
 	void loadGame();
 	void printCurrentState(byte opcode);
 
+	//////Joypad.cpp//////
+	void updateJoypad();
+
 	//////Opcodes.cpp//////
 	byte execute(byte opcode);
 	byte executeCB(byte opcode);
-
 
 	//////Graphics.cpp//////
 	void updateScreen(byte cycles);

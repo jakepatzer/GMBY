@@ -12,6 +12,8 @@ MMU::MMU(CPU* cpu)
 	for (int i = 0; i < 0xFFFF; i++) {
 		memory[i] = 0;
 	}
+
+	memory[0xFF00] = 0xFF;
 	memory[0xFF05] = 0x00;
 	memory[0xFF06] = 0x00;
 	memory[0xFF07] = 0x00;
@@ -76,6 +78,11 @@ void MMU::write(word address, byte data)
 	else if (0xFEA0 <= address && address < 0xFF00) {
 	}
 
+	//Joypad register
+	else if (address == 0xFF00) {
+		memory[address] = data & 0xF0;
+	}
+
 	//Divider register
 	else if (address == 0xFF04) {
 		memory[address] = 0;
@@ -97,9 +104,10 @@ void MMU::write(word address, byte data)
 }
 
 byte MMU::read(word address) {
-
+	
+	//Joypad register; bits 6-7 always return 1
 	if (address == 0xFF00) {
-		return 0x1F;
+		return memory[address] | 0xC0;
 	}
 
 	//Interrupt Flags; bits 5-7 always return 1
