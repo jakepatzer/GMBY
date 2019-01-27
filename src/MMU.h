@@ -27,7 +27,9 @@ public:
 	~MMU();
 
 	void write(word address, byte data);
+	void writeMBC(word address, byte data);
 	byte read(word address);
+	byte readMBC(word address);
 	word read16(word address);
 	void DMA_Transfer(byte data);
 
