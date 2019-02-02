@@ -3,7 +3,6 @@
 Cartridge::Cartridge(std::string path)
 {
 	rom = new byte[0x200000];
-	ram = new byte[0x10000]; //64 kb
 	
 	for (int i = 0; i < 0x200000; i++) {
 		rom[i] = 0;
@@ -29,6 +28,13 @@ Cartridge::Cartridge(std::string path)
 	setMBC();
 	setRomSize();
 	setRamSize();
+
+	if (mbc == MBC2) {
+		ram = new byte[512];
+	}
+	else {
+		ram = new byte[ramSize * 1024];
+	}
 	
 }
 
