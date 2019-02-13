@@ -8,9 +8,6 @@ Cartridge::Cartridge(std::string path)
 		rom[i] = 0;
 	}
 
-	for (int i = 0; i < 0x10000; i++) {
-		ram[i] = 0;
-	}
 
 	containsRam = false;
 	battery = false;
@@ -31,9 +28,15 @@ Cartridge::Cartridge(std::string path)
 
 	if (mbc == MBC2) {
 		ram = new byte[512];
+		for (int i = 0; i < 512; i++) {
+			ram[i] = 0;
+		}
 	}
 	else {
 		ram = new byte[ramSize * 1024];
+		for (int i = 0; i < ramSize * 1024; i++) {
+			ram[i] = 0;
+		}
 	}
 	
 }
