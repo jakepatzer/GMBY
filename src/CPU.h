@@ -1,6 +1,7 @@
 #pragma once
 #include "Registers.h"
 #include "Definitions.h"
+#include "Cartridge.h"
 #include "MMU.h"
 #include<SDL.h>
 #include<string>
@@ -16,7 +17,7 @@ public:
 	void executeInterrupt(byte interrupt);
 	void update();
 	void run();
-	void loadGame();
+	void loadGame(std::string name);
 	void printCurrentState(byte opcode);
 
 	//////Joypad.cpp//////

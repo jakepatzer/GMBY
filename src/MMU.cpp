@@ -7,7 +7,7 @@ MMU::MMU(CPU* cpu)
 {
 	this->cpu = cpu;
 	memory = new byte[0x10000];
-	cartridge = new byte[0x200000];
+	cartridge = nullptr;
 
 	for (int i = 0; i < 0xFFFF; i++) {
 		memory[i] = 0;
@@ -52,18 +52,26 @@ MMU::MMU(CPU* cpu)
 MMU::~MMU()
 {
 	delete[] memory;
-	delete[] cartridge;
+	delete cartridge;
 }
 
 void MMU::write(word address, byte data)
 {
-	
+
 	//Prevent writes to ROM
 	if (address < 0x8000) {
+		writeMBC(address, data);
+	}
+
+	else if (0xA000 <= address && address < 0xC000) {
+		writeMBC(address, data);
 	}
 
 	else if ((0xC000 <= address) && (address < 0xE000)) {
 		memory[address] = data;
+		if (address < 0xDE00) {
+			memory[address + 0x2000] = data;
+		}
 	}
 
 	//Write to RAM and ECHO RAM
@@ -103,10 +111,114 @@ void MMU::write(word address, byte data)
 	}
 }
 
+void MMU::writeMBC(word address, byte data)
+{
+
+	if (cartridge->mbc == NONE) {
+		return;
+	}
+	else if (cartridge->mbc == MBC1) {
+
+		if (address < 0x2000) {
+
+			if (data & 0x0F == 0x0A) {
+				cartridge->ramEnable = true;
+			}
+			else {
+				cartridge->ramEnable = false;
+			}
+
+		}
+		else if (address < 0x4000) {
+
+			cartridge->bankNum &= 0xE0;
+
+			if (data & 0x1F == 0) {
+				cartridge->bankNum |= 0x01;
+			}
+			else {
+				cartridge->bankNum |= data & 0x1F;
+			}
+
+		}
+		else if (address < 0x6000) {
+
+			cartridge->bankNum &= 0x9F;
+			cartridge->bankNum |= (data & 0x03) << 5;
+
+		}
+		else if (address < 0x8000) {
+			if (data == 0) {
+				cartridge->mode = false;
+			}
+			else {
+				cartridge->mode = true;
+			}
+		}
+		else if (0xA000 <= address && address < 0xBFFF) {
+
+			//RAM mode
+			if (cartridge->mode) {
+
+				cartridge->ram[((address - 0xA000) + (((cartridge->bankNum >> 5) & 0x03) * 0x2000))] = data;
+
+			}
+			//ROM mode
+			else {
+
+				cartridge->ram[address - 0xA000] = data;
+
+			}
+
+		}
+
+	}
+	else if (cartridge->mbc == MBC2) {
+
+		if (address < 0x2000) {
+			if ((address >> 4) & 1) {
+				return;
+			}
+			else {
+				if (data & 0x0F == 0x0A) {
+					cartridge->ramEnable = true;
+				}
+				else {
+					cartridge->ramEnable = false;
+				}
+			}
+		}
+		else if (address < 0x4000) {
+			if ((address >> 4) & 1) {
+				cartridge->bankNum = data & 0x0F;
+			}
+			else {
+				return;
+			}
+		}
+		else if (address < 0x8000) {
+			return;
+		}
+		else if (0xA000 <= address && address < 0xA200) {
+			cartridge->ram[address - 0xA000] = (data & 0x0F);
+		}
+
+	}
+
+}
+
 byte MMU::read(word address) {
-	
+
+	if (address < 0x8000) {
+		return readMBC(address);
+	}
+
+	else if (0xA000 <= address && address < 0xC000) {
+		return readMBC(address);
+	}
+
 	//Joypad register; bits 6-7 always return 1
-	if (address == 0xFF00) {
+	else if (address == 0xFF00) {
 		return memory[address] | 0xC0;
 	}
 
@@ -119,6 +231,63 @@ byte MMU::read(word address) {
 		return memory[address];
 	}
 
+}
+
+byte MMU::readMBC(word address)
+{
+	if (cartridge->mbc == NONE) {
+
+		if (address < 0x8000) {
+			return cartridge->rom[address];
+		}
+		else {
+			return 0;
+		}
+
+	}
+	else if (cartridge->mbc == MBC1) {
+
+		if (address < 0x4000) {
+			return cartridge->rom[address];
+		}
+		else if (address < 0x8000) {
+			if (cartridge->mode) {
+				return cartridge->rom[address + (0x4000 * ((cartridge->bankNum & 0x1F) - 1))];
+			}
+			else {
+				return cartridge->rom[address + (0x4000 * ((cartridge->bankNum & 0x7F) - 1))];
+			}
+		}
+		else if (0xA000 <= address && address < 0xC000) {
+
+			//RAM mode
+			if (cartridge->mode) {
+				return cartridge->ram[(address - 0xA000) + (((cartridge->bankNum >> 5) & 0x03) * 0x2000)];
+			}
+			//ROM mode
+			else {
+				return cartridge->ram[address - 0xA000];
+			}
+
+		}
+
+	}
+	else if (cartridge->mbc == MBC2) {
+
+		if (address < 0x4000) {
+			return cartridge->rom[address];
+		}
+		else if (address < 0x8000) {
+			return cartridge->rom[address + (0x4000 * ((cartridge->bankNum & 0x0F) - 1))];
+		}
+		else if (0xA000 <= address & address < 0xA200) {
+			return (cartridge->ram[address - 0xA000] & 0x0F);
+		}
+		else {
+			return 0;
+		}
+
+	}
 }
 
 word MMU::read16(word address)

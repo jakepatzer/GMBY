@@ -18,3 +18,12 @@ enum Color {
 	BLACK
 
 };
+
+enum MemoryBankController {
+
+	NONE,
+	MBC1,
+	MBC2,
+	MBC3
+
+};

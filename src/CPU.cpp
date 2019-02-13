@@ -1,4 +1,5 @@
 #include "CPU.h"
+#include "Cartridge.h"
 #include<stdio.h>
 #include<iostream>
 #include<fstream>
@@ -7,7 +8,7 @@ using std::cout;
 
 CPU::CPU(SDL_Window* w, SDL_Renderer* r)
 {
-	loadGame();
+
 	window = w;
 	renderer = r;
 	reg.af = 0x01B0;
@@ -175,17 +176,10 @@ void CPU::run()
 	}
 }
 
-void CPU::loadGame()
+void CPU::loadGame(std::string name)
 {
-	memset(mem.cartridge, 0, sizeof(mem.cartridge));
-	FILE* rom;
-	rom = fopen("roms//Tetris.gb", "rb");
-	fread(mem.cartridge, 1, 0x200000, rom);
-	fclose(rom);
-
-	for (int i = 0; i < 0x8000; i++) {
-		mem.memory[i] = mem.cartridge[i];
-	}
+	delete mem.cartridge;
+	mem.cartridge = new Cartridge(name);
 }
 
 void CPU::printCurrentState(byte opcode)
