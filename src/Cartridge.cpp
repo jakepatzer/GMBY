@@ -44,6 +44,7 @@ Cartridge::Cartridge(std::string path)
 Cartridge::~Cartridge()
 {
 	delete[] rom;
+	delete[] ram;
 }
 
 byte Cartridge::operator[](unsigned int address)
